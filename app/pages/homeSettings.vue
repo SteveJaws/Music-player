@@ -1,4 +1,5 @@
 <template>
+    <SongBubble />
     <div class="container">
         <div></div>
         <div class="text-top">
@@ -11,7 +12,7 @@
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .container{
         height: 100vh;
         display: flex;
@@ -37,5 +38,6 @@
 
 <script setup lang="ts">
 import BackgroundEffect from '~/components/backgroundEffect.vue';
+import SongBubble from '~/components/songBubble.vue';
 
 </script>

@@ -10,7 +10,10 @@ $text-color: white;        // Standaard witte tekst voor de body
 
 // --- Extra Persona 4 Vibes ---
 $ui-secondary: #F39200;         // Warm oranje voor sub-menu's en verloopjes
+$ui-green: #23DA00;
 $ui-shadow: 4px 4px 0px #000000; // De typische 'harde' zwarte schaduw achter letters en menu-blokken
 
-// --- Fonts & Layout --
-$border-radius-sharp: 0px;   // Persona 4 gebruikt vaak hele strakke, scherpe hoeken (of juist ruiten)
+@mixin icon(){
+  border: none;
+  background: none;
+}

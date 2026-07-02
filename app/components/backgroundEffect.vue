@@ -5,9 +5,9 @@
 
 <style lang="scss">
     .background-effect{
-        width: 100%;
-        height: 100%;
-        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
         top: 0;
         left: 0;
         z-index: -9999999;
@@ -23,7 +23,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        animation: fill-screen 10s linear forwards;
+        animation: fill-screen 15s linear forwards;
     }
 
     .color-main{
@@ -54,7 +54,7 @@
         createBlock();
         setInterval(() => {
             createBlock();
-        }, 1000);
+        }, 1500);
         setInterval(() => {
            shouldDeleteBlock();
         },50);
