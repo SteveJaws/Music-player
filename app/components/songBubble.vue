@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <button class="close-bubble-button" :class="{'bubble-visible': bubbleIsOpen}" @click="closeBubble">close</button>
+        <button class="close-bubble-button" :class="{'close-button-visible': bubbleIsOpen}" @click="closeBubble">close</button>
         <div @click="openBubble" id="bubble" class="bubble" :class="{ 'bubble-beat bubble-visible': songIsPlaying }">
             <div class="special-border-1"></div>
             <div class="special-border-2"></div>
@@ -39,7 +39,14 @@
         height: 100vh;
 
         .close-bubble-button{
+            width: 100vw;
+            height: 100vh;
             opacity: 0;
+            display: none;
+        }
+
+        .close-button-visible{
+            display: block;
         }
 
         .bubble-visible{
@@ -227,7 +234,16 @@
         }
 
         .open-bubble{
-            animation: open-bubble-anim 0.8s ease-in-out forwards;
+            animation: click-feedback 0.5s ease-in-out,  open-bubble-anim 0.8s ease-in-out forwards 0.5s;
+
+            @keyframes click-feedback{
+                50%{
+                    transform: scale(2);
+                }
+                100%{
+                    transform: scale(1);
+                }
+            }
 
             @keyframes open-bubble-anim{
                 80%{
