@@ -1,5 +1,6 @@
 <template>
   <BackgroundEffect />
+  <Tablet :tablet-open="tabletOpen" />
   <NuxtPage />
 </template>
 
@@ -38,8 +39,11 @@ body{
 
 <script setup>
 import { useAudioStore } from '~~/stores/audio';
+import Tablet from './components/tablet.vue';
 
 const audioStore = useAudioStore();
+
+const tabletOpen = ref(false);
 
 onMounted(() => {
   audioStore.startSong({
@@ -87,9 +91,9 @@ function handleTouchMove(evt) {
                                                                          
     if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
         if ( xDiff > 0 ) {
-            /* right swipe */ 
+          /* left swipe */
         } else {
-            /* left swipe */
+          tabletOpen.value = true;
         }                       
     } else {
         if ( yDiff > 0 ) {

@@ -6,7 +6,7 @@
             Welcome back username
         </div>
         <div class="text-bottom">
-            Swipe up for current song!
+            Swipe up for current song or swipe right to open the menu!
         </div>
     </div>
 </template>
