@@ -7,6 +7,7 @@ export const useAudioStore = defineStore('audio', () => {
     const currentSong = ref<Song | null>(null);
     const shouldRepeat = ref(false);
     const shouldShuffle = ref(false);
+    const isBubbleOpen = ref(false);
 
     function startSong(song: Song){
         currentSong.value = song;
@@ -45,8 +46,16 @@ export const useAudioStore = defineStore('audio', () => {
         return response;
     }
 
-    function getCurrentSongDurationInfo(){
-        
+    function openBubble(){
+        isBubbleOpen.value = true;
+    }
+
+    function closeBubble(){
+        isBubbleOpen.value = false;
+    }
+
+    function shouldOpenBubble(){
+        return isBubbleOpen.value;
     }
 
     return{
@@ -59,6 +68,9 @@ export const useAudioStore = defineStore('audio', () => {
         turnShuffleOn,
         shouldShuffle,
         turnShuffleOff,
-        getPlayerInfo
+        getPlayerInfo,
+        openBubble,
+        shouldOpenBubble,
+        closeBubble
     }
 })

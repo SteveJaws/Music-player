@@ -1,7 +1,7 @@
 <template>
     <div v-if="currentSong != null" class="container">
         <button class="close-bubble-button" :class="{'close-button-visible': bubbleIsOpen}" @click="closeBubble">close</button>
-        <div @click="openBubble" id="bubble" class="bubble" :class="{ 'bubble-beat bubble-visible': songIsPlaying }">
+        <div id="bubble" class="bubble" :class="{ 'bubble-beat bubble-visible': songIsPlaying }">
             <div id="bubbleImage" class="bubble-image" :class="{'rotate-bubble-image' : songIsPlaying }" :style="{ backgroundImage: `url(${currentSong?.image})` }"></div>
             <div class="special-border-1"></div>
             <div class="special-border-2"></div>
@@ -66,8 +66,9 @@
 
         .bubble{
             position: absolute;
-            right: -2.5rem;
-            top: -2.5rem;
+            left: 50%;
+            top: 95%;
+            transform: translate(-50%, 0);
             width: 9rem;
             height: 9rem;
             border-radius: 50%;
@@ -295,22 +296,13 @@
         }
 
         .open-bubble{
-            animation: click-feedback 0.5s ease-in-out,  open-bubble-anim 0.2s ease-in-out forwards 0.5s;
-
-            @keyframes click-feedback{
-                50%{
-                    transform: scale(2);
-                }
-                100%{
-                    transform: scale(1);
-                }
-            }
+            animation: open-bubble-anim 0.2s ease-in-out forwards;
 
             @keyframes open-bubble-anim{
                 100%{
                     top: 50%;
-                    right: 50%;
-                    transform: translate(50%, -50%) scale(4);
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(4);
                 }
             }
         }
@@ -321,13 +313,13 @@
             @keyframes close-bubble-anim {
                 0% {
                     top: 50%;
-                    right: 50%;
-                    transform: translate(50%, -50%) scale(4);
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(4);
                 }
                 100% {
-                    top: -2.5rem;
-                    right: -2.5rem;
-                    transform: none;
+                    top: 95%;
+                    left: 50%;
+                    transform: translate(-50%, 0);
                 }
             }
         }
@@ -338,10 +330,10 @@
 
         @keyframes beat{
             20%{
-                transform: scale(1.1);
+                transform: translate(-50%, 0) scale(1.1);
             }
             100%{
-                transform: scale(1);
+                transform: translate(-50%, 0) scale(1);
             }
         }
     }
@@ -352,7 +344,7 @@ import { useAudioStore } from '~~/stores/audio';
 
     const audioStore = useAudioStore();
     const songIsPlaying = ref(false);
-    let bubbleIsOpen = ref(false);
+    const bubbleIsOpen = ref(false);
     const currentSong = ref(null);
     const playerInfo = ref(null);
 
@@ -384,11 +376,11 @@ import { useAudioStore } from '~~/stores/audio';
             bubble.classList.add("bubble-beat");
         }, 500);
         bubbleIsOpen.value = false;
+        audioStore.closeBubble();
     }
 
     onMounted(() => {
         getData();
-        calcBarPercentage();
     });
 
     function getData(){
@@ -396,6 +388,14 @@ import { useAudioStore } from '~~/stores/audio';
             songIsPlaying.value = audioStore.isPlaying;
             currentSong.value = audioStore.getCurrentSong();
             playerInfo.value = audioStore.getPlayerInfo();
+            
+            if(audioStore.shouldOpenBubble() && bubbleIsOpen.value == false){
+                openBubble();
+            }
+
+            else if(audioStore.shouldOpenBubble() == false && bubbleIsOpen.value == true){
+                closeBubble();
+            }
         }, 10);
     }
 </script>
