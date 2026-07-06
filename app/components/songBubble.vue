@@ -11,19 +11,23 @@
                 <div class="top"></div>
                 <div class="middle"></div>
                 <div class="bottom">
-                    <div class="top"></div>
+                    <div class="top">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#1f1f1f"><path d="M280-80 120-240l160-160 56 58-62 62h406v-160h80v240H274l62 62-56 58Zm-80-440v-240h486l-62-62 56-58 160 160-160 160-56-58 62-62H280v160h-80Z"/></svg>
+                    </div>
                     <div class="middle">
                         <div class="back">
-                            back
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#1f1f1f"><path d="M220-240v-480h80v480h-80Zm520 0L380-480l360-240v480Zm-80-240Zm0 90v-180l-136 90 136 90Z"/></svg>
                         </div>
                         <div class="play-pause">
-                            play-pause
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#1f1f1f"><path d="M200-312v-336l240 168-240 168Zm320-8v-320h80v320h-80Zm160 0v-320h80v320h-80Z"/></svg>
                         </div>
                         <div class="forward">
-                            forward
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#1f1f1f"><path d="M660-240v-480h80v480h-80Zm-440 0v-480l360 240-360 240Zm80-240Zm0 90 136-90-136-90v180Z"/></svg>
                         </div>
                     </div>
-                    <div class="bottom"></div>
+                    <div class="bottom">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#1f1f1f"><path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/></svg>
+                    </div>
                 </div>
             </div>
         </div>
@@ -64,6 +68,7 @@
             opacity: 0;
 
             .song-player{
+                position: absolute;
                 width: 100%;
                 height: 100%;
                 border-radius: 50%;
@@ -73,8 +78,19 @@
                 flex-direction: column;
                 gap: 0.3rem;
                 font-size: 0.5rem;
-                transition: 1s ease-in-out;
+                transition: 0.2s ease-in-out;
                 opacity: 0;
+                pointer-events: none;
+
+                svg{
+                    fill: grey;
+                    width: 1rem;
+                    height: 1rem;
+                }
+
+                .selected{
+                    fill: white;
+                }
 
                 button{
                     @include icon();
@@ -97,23 +113,25 @@
                 .bottom{
                     width: 50%;
                     height: 40%;
-                    background-color: red;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
 
                     .top{
-                        background-color: blue;
                         width: 100%;
                         height: 30%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: transparent;
                     }
 
                     .middle{
-                        background-color: blue;
                         width: 100%;
                         height: 30%;
                         display: flex;
                         justify-content: space-between;
+                        background: transparent;
 
                         *{
                             display: flex;
@@ -124,32 +142,32 @@
                         .back{
                             width: 30%;
                             height: 100%;
-                            background-color: green;
                         }
 
                         .play-pause{
                             width: 30%;
                             height: 100%;
-                            background-color: green;
                         }
 
                         .forward{
                             width: 30%;
                             height: 100%;
-                            background-color: green;
                         }
                     }
 
                     .bottom{
-                        background-color: blue;
                         width: 100%;
                         height: 30%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                     }
                 }
             }
 
             .song-player-visible{
                 opacity: 1;
+                pointer-events: all;
             }
 
             .special-border-1{
@@ -234,7 +252,7 @@
         }
 
         .open-bubble{
-            animation: click-feedback 0.5s ease-in-out,  open-bubble-anim 0.8s ease-in-out forwards 0.5s;
+            animation: click-feedback 0.5s ease-in-out,  open-bubble-anim 0.2s ease-in-out forwards 0.5s;
 
             @keyframes click-feedback{
                 50%{
@@ -246,11 +264,6 @@
             }
 
             @keyframes open-bubble-anim{
-                80%{
-                    top: 50%;
-                    right: 50%;
-                    transform: translate(50%, -50%) scale(1);
-                }
                 100%{
                     top: 50%;
                     right: 50%;
@@ -260,7 +273,7 @@
         }
         
         .close-bubble{
-            animation: close-bubble-anim 0.8s ease-in-out forwards;
+            animation: close-bubble-anim 0.2s ease-in-out forwards;
 
             @keyframes close-bubble-anim {
                 0% {
@@ -302,7 +315,9 @@
         bubble.classList.remove("close-bubble");
         bubble.classList.remove('bubble-beat');
         bubble.classList.add("open-bubble");
-        songPlayer.classList.add("song-player-visible")
+        setTimeout(() => {
+            songPlayer.classList.add("song-player-visible")
+        }, 300)
         bubbleIsOpen.value = true;
     }
 
@@ -312,7 +327,21 @@
         bubble.classList.add("close-bubble");
         setTimeout(() => {
             bubble.classList.add("bubble-beat");
-        }, 1000);
+        }, 300);
         bubbleIsOpen.value = false;
     }
+
+    onMounted(() => {
+        document.querySelectorAll("svg").forEach((svg) => {
+            svg.addEventListener("click", () => {
+                if(svg.classList.contains("selected")){
+                    svg.classList.remove("selected")
+                }
+                else{
+                    svg.classList.add("selected")
+                }
+
+            });
+        });
+    });
 </script>

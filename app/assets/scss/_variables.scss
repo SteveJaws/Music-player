@@ -17,3 +17,7 @@ $ui-shadow: 4px 4px 0px #000000; // De typische 'harde' zwarte schaduw achter le
   border: none;
   background: none;
 }
+
+:export {
+  mainColor: $main-color;
+}
