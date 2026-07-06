@@ -1,5 +1,4 @@
 <template>
-    {{ props.tabletOpen }}
     <div class="container" :class="{'tablet-open-anim' : tabletOpen}">
         <div class="top"></div>
         <div class="bottom">
