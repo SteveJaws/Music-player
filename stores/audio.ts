@@ -5,6 +5,8 @@ export const useAudioStore = defineStore('audio', () => {
 
     const isPlaying = ref(false);
     const currentSong = ref<Song | null>(null);
+    const shouldRepeat = ref(false);
+    const shouldShuffle = ref(false);
 
     function startSong(song: Song){
         currentSong.value = song;
@@ -17,10 +19,46 @@ export const useAudioStore = defineStore('audio', () => {
         }
         return null;
     }
+    
+    function turnShuffleOn(){
+        shouldShuffle.value = true;
+    }
+
+    function turnShuffleOff(){
+        shouldShuffle.value = false;
+    }
+
+    function turnRepeatOn(){
+        shouldRepeat.value = true;
+    }
+
+    function turnRepeatOff(){
+        shouldRepeat.value = false;
+    }
+
+    function getPlayerInfo(){
+        const response = {
+            shuffle: shouldShuffle.value,
+            repeat: shouldRepeat.value
+        }
+
+        return response;
+    }
+
+    function getCurrentSongDurationInfo(){
+        
+    }
 
     return{
         isPlaying,
         startSong,
-        getCurrentSong
+        getCurrentSong,
+        turnRepeatOn,
+        turnRepeatOff,
+        shouldRepeat,
+        turnShuffleOn,
+        shouldShuffle,
+        turnShuffleOff,
+        getPlayerInfo
     }
 })

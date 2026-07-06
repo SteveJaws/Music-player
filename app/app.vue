@@ -35,3 +35,19 @@ body{
   }
 }
 </style>
+
+<script setup>
+import { useAudioStore } from '~~/stores/audio';
+
+const audioStore = useAudioStore();
+
+onMounted(() => {
+  audioStore.startSong({
+    id: 1,
+    title: "testSong",
+    artist: "testArtist",
+    duration: 120,
+    image: "https://picsum.photos/400"
+  })
+});
+</script>

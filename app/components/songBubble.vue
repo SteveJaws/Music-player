@@ -1,32 +1,42 @@
 <template>
-    <div class="container">
+    <div v-if="currentSong != null" class="container">
         <button class="close-bubble-button" :class="{'close-button-visible': bubbleIsOpen}" @click="closeBubble">close</button>
         <div @click="openBubble" id="bubble" class="bubble" :class="{ 'bubble-beat bubble-visible': songIsPlaying }">
+            <div id="bubbleImage" class="bubble-image" :class="{'rotate-bubble-image' : songIsPlaying }" :style="{ backgroundImage: `url(${currentSong?.image})` }"></div>
             <div class="special-border-1"></div>
             <div class="special-border-2"></div>
             <div class="special-border-3"></div>
             <div class="special-border-4"></div>
 
             <div class="song-player" id="songPlayer">
-                <div class="top"></div>
-                <div class="middle"></div>
+                <div class="middle">
+                    <div class="player-bar">
+                        <div class="bar-filling"></div>
+                    </div>
+                    <div class="duration-info">
+                        <span>00:00</span>
+                        <span>02:50</span>
+                    </div>
+                </div>
                 <div class="bottom">
                     <div class="top">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#1f1f1f"><path d="M280-80 120-240l160-160 56 58-62 62h406v-160h80v240H274l62 62-56 58Zm-80-440v-240h486l-62-62 56-58 160 160-160 160-56-58 62-62H280v160h-80Z"/></svg>
+                        <svg v-if="playerInfo != null && playerInfo.repeat == false" @click="audioStore.turnRepeatOn" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="grey"><path d="M280-80 120-240l160-160 56 58-62 62h406v-160h80v240H274l62 62-56 58Zm-80-440v-240h486l-62-62 56-58 160 160-160 160-56-58 62-62H280v160h-80Z"/></svg>
+                        <svg v-else @click="audioStore.turnRepeatOff" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="white"><path d="M280-80 120-240l160-160 56 58-62 62h406v-160h80v240H274l62 62-56 58Zm-80-440v-240h486l-62-62 56-58 160 160-160 160-56-58 62-62H280v160h-80Z"/></svg>
                     </div>
                     <div class="middle">
                         <div class="back">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#1f1f1f"><path d="M220-240v-480h80v480h-80Zm520 0L380-480l360-240v480Zm-80-240Zm0 90v-180l-136 90 136 90Z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="white"><path d="M220-240v-480h80v480h-80Zm520 0L380-480l360-240v480Zm-80-240Zm0 90v-180l-136 90 136 90Z"/></svg>
                         </div>
                         <div class="play-pause">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#1f1f1f"><path d="M200-312v-336l240 168-240 168Zm320-8v-320h80v320h-80Zm160 0v-320h80v320h-80Z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="white"><path d="M200-312v-336l240 168-240 168Zm320-8v-320h80v320h-80Zm160 0v-320h80v320h-80Z"/></svg>
                         </div>
                         <div class="forward">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#1f1f1f"><path d="M660-240v-480h80v480h-80Zm-440 0v-480l360 240-360 240Zm80-240Zm0 90 136-90-136-90v180Z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="white"><path d="M660-240v-480h80v480h-80Zm-440 0v-480l360 240-360 240Zm80-240Zm0 90 136-90-136-90v180Z"/></svg>
                         </div>
                     </div>
                     <div class="bottom">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#1f1f1f"><path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/></svg>
+                        <svg v-if="playerInfo != null && playerInfo.shuffle == false" @click="audioStore.turnShuffleOn" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="grey"><path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/></svg>
+                        <svg v-else @click="audioStore.turnShuffleOff" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="white"><path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/></svg>
                     </div>
                 </div>
             </div>
@@ -51,10 +61,7 @@
 
         .close-button-visible{
             display: block;
-        }
-
-        .bubble-visible{
-            opacity: 1 !important;
+            filter: brightness(0.4);
         }
 
         .bubble{
@@ -65,7 +72,24 @@
             height: 9rem;
             border-radius: 50%;
             background-color: $bg-color;
-            opacity: 0;
+
+            .bubble-image{
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                background-color: red;
+                border-radius: 50%;
+            }
+
+            .rotate-bubble-image{
+                animation: rotate 10s linear infinite;
+
+                @keyframes rotate{
+                    100%{
+                        transform: rotate(360deg);
+                    }
+                }
+            }
 
             .song-player{
                 position: absolute;
@@ -76,20 +100,15 @@
                 align-items: center;
                 justify-content: center;
                 flex-direction: column;
-                gap: 0.3rem;
+                gap: 1rem;
                 font-size: 0.5rem;
                 transition: 0.2s ease-in-out;
                 opacity: 0;
                 pointer-events: none;
 
                 svg{
-                    fill: grey;
                     width: 1rem;
                     height: 1rem;
-                }
-
-                .selected{
-                    fill: white;
                 }
 
                 button{
@@ -107,7 +126,31 @@
                 .middle{
                     width: 60%;
                     height: 5%;
-                    background-color: red;
+
+                    .player-bar{
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: start;
+                        background-color: blue;
+
+                        .bar-filling{
+                            width: 0%;
+                            height: 50%;
+                            background-color: $main-color;
+                        }
+                    }
+
+                    .duration-info{
+                        width: 100%;
+                        height: 100%;
+                        margin-top: 0.2rem;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        font-size: 0.3rem;
+                    }
                 }
 
                 .bottom{
@@ -310,45 +353,49 @@ import { useAudioStore } from '~~/stores/audio';
     const audioStore = useAudioStore();
     const songIsPlaying = ref(false);
     let bubbleIsOpen = ref(false);
+    const currentSong = ref(null);
+    const playerInfo = ref(null);
 
     function openBubble(){
         const bubble = document.getElementById("bubble");
         const songPlayer = document.getElementById("songPlayer");
+        const bubbleImage = document.getElementById("bubbleImage");
 
         bubble.classList.remove("close-bubble");
         bubble.classList.remove('bubble-beat');
         bubble.classList.add("open-bubble");
         setTimeout(() => {
-            songPlayer.classList.add("song-player-visible")
-        }, 300)
+            songPlayer.classList.add("song-player-visible");
+            bubbleImage.style.filter = "brightness(0.5)";
+        }, 500)
         bubbleIsOpen.value = true;
     }
 
     function closeBubble(){
+        const bubble = document.getElementById("bubble");
+        const songPlayer = document.getElementById("songPlayer");
+        const bubbleImage = document.getElementById("bubbleImage");
+
         songPlayer.classList.remove("song-player-visible")
         bubble.classList.remove("open-bubble");
         bubble.classList.add("close-bubble");
+        bubbleImage.style.filter = "brightness(1)";
         setTimeout(() => {
             bubble.classList.add("bubble-beat");
-        }, 300);
+        }, 500);
         bubbleIsOpen.value = false;
     }
 
     onMounted(() => {
-        document.querySelectorAll("svg").forEach((svg) => {
-            svg.addEventListener("click", () => {
-                if(svg.classList.contains("selected")){
-                    svg.classList.remove("selected")
-                }
-                else{
-                    svg.classList.add("selected")
-                }
+        getData();
+        calcBarPercentage();
+    });
 
-            });
-        });
-
+    function getData(){
         setInterval(() => {
             songIsPlaying.value = audioStore.isPlaying;
-        }, 500);
-    });
+            currentSong.value = audioStore.getCurrentSong();
+            playerInfo.value = audioStore.getPlayerInfo();
+        }, 10);
+    }
 </script>
