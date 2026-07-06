@@ -305,7 +305,10 @@
 </style>
 
 <script setup>
-    const songIsPlaying = ref(true);
+import { useAudioStore } from '~~/stores/audio';
+
+    const audioStore = useAudioStore();
+    const songIsPlaying = ref(false);
     let bubbleIsOpen = ref(false);
 
     function openBubble(){
@@ -343,5 +346,9 @@
 
             });
         });
+
+        setInterval(() => {
+            songIsPlaying.value = audioStore.isPlaying;
+        }, 500);
     });
 </script>
