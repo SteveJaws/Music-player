@@ -1,5 +1,5 @@
 <template>
-    <div class="container" :class="{'tablet-open-anim' : tabletOpen, 'tablet-close-anim' : tabletClose}">
+    <div class="container" v-on:animationend="globalStore.shake" :class="{'tablet-open-anim' : tabletOpen, 'tablet-close-anim' : tabletClose}">
         <div class="top"></div>
         <div class="bottom">
             <div class="home-button"></div>
@@ -90,16 +90,10 @@ watch(() => props.tabletOpen, (newValue, oldValue) => {
     if(newValue === true && oldValue === false){
         tabletClose.value = false;
         tabletOpen.value = newValue;
-        setTimeout(() => {
-            globalStore.shake();
-        }, 300);
     }
     else if(newValue === false && oldValue === true){
         tabletOpen.value = newValue;
         tabletClose.value = true;
-        setTimeout(() => {
-            globalStore.shake();
-        }, 300)
     }
 });
 </script>
