@@ -53,7 +53,7 @@
 </style>
 
 <script setup>
-import TabletScreen from '~/pages/tabletScreen.vue';
+import TabletScreen from '~/components/tabletScreen.vue';
 import { useGlobalStore } from '~~/stores/global';
 
 const tabletOpen = ref(false);

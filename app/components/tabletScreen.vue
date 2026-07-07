@@ -1,5 +1,10 @@
 <template>
     <div class="tablet" :class="{'is-open' : menuOpen, 'is-closed' : !menuOpen && hasOpenedOnce}">
+        <div id="slideList" class="slide-list">
+            <div id="0" class="slide-1"></div>
+            <div id="1" class="slide-2"></div>
+            <div id="2" class="slide-3"></div>
+        </div>
         <div class="turn-on-overlay-top"></div>
         <div class="turn-on-overlay-bottom"></div>
     </div>
@@ -15,7 +20,34 @@
         border: 0.5rem solid black;
         border-radius: 1rem;
         position: relative;
-        overflow: hidden;
+
+        .slide-list{
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: flex;
+            overflow-x: hidden;
+
+            .slide-1{
+                min-width: 100%;
+                height: 100%;
+                background-color: green;
+            }
+
+            .slide-2{
+                min-width: 100%;
+                height: 100%;
+                background-color: red;
+            }
+
+            .slide-3{
+                min-width: 100%;
+                height: 100%;
+                background-color: blue;
+            }
+        }
 
         .turn-on-overlay-top,
         .turn-on-overlay-bottom {
@@ -104,8 +136,23 @@ import { useGlobalStore } from '~~/stores/global';
 const globalStore = useGlobalStore();
 const menuOpen = computed(() => globalStore.menuFocus);
 
+const currentSlide = ref(0);
+
 // Nieuw: hiermee onthouden we of de tablet ooit open is geweest
 const hasOpenedOnce = ref(false);
+
+var xDown = null;                                                        
+var yDown = null;
+
+onMounted(() => {
+    document.addEventListener('touchstart', handleTouchStart, false);        
+    document.addEventListener('touchmove', handleTouchMove, false);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('touchstart', handleTouchStart);
+    document.removeEventListener('touchmove', handleTouchMove);
+});
 
 // Luister naar menuOpen. Zodra die 1x true is, blijft hasOpenedOnce true.
 watch(menuOpen, (newValue) => {
@@ -113,4 +160,61 @@ watch(menuOpen, (newValue) => {
         hasOpenedOnce.value = true;
     }
 });
+
+function getTouches(evt) {
+  return evt.touches ||             // browser API
+         evt.originalEvent.touches; // jQuery
+}                                                     
+                                                                         
+function handleTouchStart(evt) {
+    const firstTouch = getTouches(evt)[0];                                      
+    xDown = firstTouch.clientX;                                      
+    yDown = firstTouch.clientY;                                      
+};                                                
+                                                                         
+function handleTouchMove(evt) {
+    const slideList = document.getElementById("slideList");
+
+    if ( ! xDown || ! yDown ) {
+        return;
+    }
+
+    var xUp = evt.touches[0].clientX;                                    
+    var yUp = evt.touches[0].clientY;
+
+    var xDiff = xDown - xUp;
+    var yDiff = yDown - yUp;
+                                                                         
+    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+        if ( xDiff > 0 ) {
+        //   swipe left
+        } else {
+        //   swipe right
+        }                       
+    } else {
+        const slideWidth = slideList.clientWidth;
+        if ( yDiff > 0 ) {
+            if(menuOpen.value && currentSlide.value < 2){
+                currentSlide.value += 1;
+
+                slideList.scrollTo({
+                    left: currentSlide.value * slideWidth,
+                    behavior: 'smooth'
+                });
+            }
+        } else {
+            if(menuOpen.value && currentSlide.value > 0){
+                currentSlide.value -= 1;
+
+                slideList.scrollTo({
+                    left: currentSlide.value * slideWidth,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    }
+    /* reset values */
+    xDown = null;
+    yDown = null;                                             
+}
 </script>

@@ -95,7 +95,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    // Altijd netjes opruimen om memory leaks te voorkomen
     document.removeEventListener('touchstart', handleTouchStart);
     document.removeEventListener('touchmove', handleTouchMove);
 });
