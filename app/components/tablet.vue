@@ -60,7 +60,10 @@
 </style>
 
 <script setup>
+import { useGlobalStore } from '~~/stores/global';
+
 const tabletOpen = ref(false);
+const globalStore = useGlobalStore();
 
 // Vang de props op in een variabele (meestal 'props' genoemd)
 const props = defineProps({
@@ -69,6 +72,12 @@ const props = defineProps({
 
 onMounted(() => {
     setInterval(() => {
+        if(tabletOpen.value == false && props.tabletOpen == true){
+            setTimeout(() => {
+                globalStore.shake();
+            }, 300);
+        }
+
         tabletOpen.value = props.tabletOpen;
     }, 10);
 });

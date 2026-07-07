@@ -1,7 +1,9 @@
 <template>
   <BackgroundEffect />
   <Tablet :tablet-open="tabletOpen" />
-  <NuxtPage />
+  <div :class="{'shake' : shouldShake}">
+    <NuxtPage />
+  </div>
 </template>
 
 <style lang="scss">
@@ -35,15 +37,37 @@ body{
     font-size: 22px;
   }
 }
+
+.shake{
+  animation: shake-effect 0.5s ease-in-out;
+}
+
+@keyframes shake-effect{
+  0% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-5px, 2px) rotate(-1deg); }
+  20% { transform: translate(4px, -2px) rotate(1deg); }
+  30% { transform: translate(-3px, 3px) rotate(0deg); }
+  40% { transform: translate(3px, 1px) rotate(1deg); }
+  50% { transform: translate(-2px, -3px) rotate(-1deg); }
+  60% { transform: translate(2px, 2px) rotate(0deg); }
+  70% { transform: translate(-1px, 1px) rotate(-1deg); }
+  80% { transform: translate(1px, -1px) rotate(1deg); }
+  90% { transform: translate(0px, 2px) rotate(0deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
 </style>
 
 <script setup>
 import { useAudioStore } from '~~/stores/audio';
+import { useGlobalStore } from '~~/stores/global';
 import Tablet from './components/tablet.vue';
 
 const audioStore = useAudioStore();
+const globalStore = useGlobalStore();
 
 const tabletOpen = ref(false);
+
+const shouldShake = ref(false);
 
 onMounted(() => {
   audioStore.startSong({
@@ -56,6 +80,10 @@ onMounted(() => {
 
   document.addEventListener('touchstart', handleTouchStart, false);        
   document.addEventListener('touchmove', handleTouchMove, false);
+
+  setInterval(() => {
+    shouldShake.value = globalStore.shouldShake;
+  });
 });
 
 onUnmounted(() => {
