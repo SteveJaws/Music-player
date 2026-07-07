@@ -17,7 +17,6 @@
         position: relative;
         overflow: hidden;
 
-        // Basis instellingen voor de overlays (ze starten als zwart scherm)
         .turn-on-overlay-top,
         .turn-on-overlay-bottom {
             width: 50%;
@@ -26,7 +25,6 @@
             z-index: 5;
         }
 
-        // --- ANIMATIES BIJ OPENEN ---
         &.is-open {
             .turn-on-overlay-top {
                 animation: turn-on-top 0.4s ease-in forwards, turn-on-open 0.2s ease-in forwards 0.4s;
@@ -36,10 +34,8 @@
             }
         }
 
-        // --- ANIMATIES BIJ SLUITEN (NIEUW!) ---
         &.is-closed {
             .turn-on-overlay-top {
-                // We starten breedte op 0 en animeren terug naar 50%
                 width: 0; 
                 animation: turn-off-close 0.2s ease-out forwards, turn-off-top 0.4s ease-out forwards 0.2s;
             }
