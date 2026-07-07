@@ -48,7 +48,7 @@
 
         @keyframes open-tablet{
             0%{
-                left: -55%;
+                left: -13rem;
                 transform: translate(0, -50%) rotate(-45deg);
             }
             100%{
@@ -67,7 +67,7 @@
                 transform: translate(0, -50%) rotate(240deg);
             }
             100%{
-                left: -55%;
+                left: -13rem;
                 transform: translate(0, -50%) rotate(-45deg);
             }
         }

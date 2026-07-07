@@ -48,13 +48,14 @@
     .container{
         position: fixed;
         top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
+        left: 50%;
+        transform: translate(-50%, 0);
+        width: 100%;
+        height: 100%;
 
         .close-bubble-button{
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             opacity: 0;
             display: none;
         }
@@ -151,6 +152,10 @@
                         justify-content: space-between;
                         align-items: center;
                         font-size: 0.3rem;
+
+                        span{
+                            padding: 0;
+                        }
                     }
                 }
 

@@ -3,10 +3,14 @@
     <div class="container">
         <div></div>
         <div class="text-top">
-            Welcome back username
+            <span>
+                Welcome back username
+            </span>
         </div>
         <div class="text-bottom">
-            Swipe up for current song or swipe right to open the menu!
+            <span>
+                Swipe up for current song or swipe right to open the menu!
+            </span>
         </div>
     </div>
 </template>

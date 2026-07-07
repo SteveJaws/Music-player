@@ -1,7 +1,7 @@
 <template>
   <BackgroundEffect />
   <Tablet :tablet-open="tabletOpen" />
-  <div :class="{'shake' : shouldShake}">
+  <div class="app" :class="{'shake' : shouldShake}">
     <NuxtPage />
   </div>
 </template>
@@ -36,6 +36,15 @@ body{
   body{
     font-size: 22px;
   }
+}
+
+span, p, h1, h2, h3, h4, h5, h6{
+  padding: 0 1rem;
+}
+
+.app, .container{
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 .shake{
