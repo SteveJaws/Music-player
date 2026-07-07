@@ -1,9 +1,11 @@
 <template>
   <BackgroundEffect />
-  <Tablet :tablet-open="tabletOpen" />
+  <PageTransition v-show="transition" />
   <div class="app" :class="{'shake' : shouldShake}">
     <NuxtPage />
   </div>
+  <Tablet :tablet-open="tabletOpen" />
+
 </template>
 
 <style lang="scss">
@@ -70,6 +72,10 @@ span, p, h1, h2, h3, h4, h5, h6{
 import { useAudioStore } from '~~/stores/audio';
 import { useGlobalStore } from '~~/stores/global';
 import Tablet from './components/tablet.vue';
+import PageTransition from './components/pageTransition.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const audioStore = useAudioStore();
 const globalStore = useGlobalStore();
@@ -80,6 +86,8 @@ const shouldShake = computed(() => globalStore.shouldShake);
 
 const menuFocus = computed(() => globalStore.menuFocus);
 const bubbleFocus = computed(() => globalStore.bubbleFocus);
+
+const transition = ref(false);
 
 onMounted(() => {
   audioStore.startSong({
@@ -98,6 +106,23 @@ onUnmounted(() => {
     document.removeEventListener('touchstart', handleTouchStart);
     document.removeEventListener('touchmove', handleTouchMove);
 });
+
+watch(
+  () => globalStore.loadPage, 
+  (newValue, oldValue) => {
+    if (newValue) {
+      transition.value = true;
+
+      setTimeout(() => {
+        router.push(newValue);
+      }, 400)
+
+      setTimeout(() => {
+        transition.value = false;
+      }, 850)
+    }
+  }
+);
 
 var xDown = null;                                                        
 var yDown = null;

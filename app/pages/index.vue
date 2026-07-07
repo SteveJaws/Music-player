@@ -42,4 +42,8 @@
 <script setup>
 import BackgroundEffect from '~/components/backgroundEffect.vue';
 import SongBubble from '~/components/songBubble.vue';
+import { useGlobalStore } from '~~/stores/global';
+
+const globalStore = useGlobalStore();
+
 </script>

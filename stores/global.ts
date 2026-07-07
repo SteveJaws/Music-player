@@ -7,6 +7,8 @@ export const useGlobalStore = defineStore('global', () => {
     const menuFocus = ref(false);
     const bubbleFocus = ref(false);
 
+    const loadPage = ref("");
+
     function openBubble(){
         bubbleFocus.value = true;
     }
@@ -34,6 +36,11 @@ export const useGlobalStore = defineStore('global', () => {
         }, 500);
     }
 
+    function page(page: string){
+        console.log(page);
+        loadPage.value = page;
+    }
+
     return {
         shouldShake,
         shake,
@@ -42,6 +49,8 @@ export const useGlobalStore = defineStore('global', () => {
         openMenu,
         closeMenu,
         openBubble,
-        closeBubble
+        closeBubble,
+        page,
+        loadPage
     }
 });

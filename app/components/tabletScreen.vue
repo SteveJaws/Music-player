@@ -1,10 +1,16 @@
 <template>
     <div class="tablet" :class="{'is-open' : menuOpen, 'is-closed' : !menuOpen && hasOpenedOnce}">
         <div id="slideList" class="slide-list">
-            <div class="slide" style="background-color: grey;" id="0">
+            <div v-if="route.name === 'index'"  @click="globalStore.page('/settings')" class="slide" style="background-color: grey;" id="0">
                 <div class="content">
-                    <img src="../assets/images/settings-image.png" alt="settings image">
-                    <h1>settings</h1>
+                    <img src="../assets/images/settings.png" alt="settings image">
+                    <h1>Settings</h1>
+                </div>
+            </div>
+            <div v-if="route.name === 'settings'"  @click="globalStore.page('/')" class="slide" style="background-color: grey;" id="0">
+                <div class="content">
+                    <img src="../assets/images/home.png" alt="settings image">
+                    <h1>Home</h1>
                 </div>
             </div>
             <div v-for="(playList, index) in playLists" :style="{'backgroundColor': playList.color}" :id="index + 1" class="slide">
@@ -32,6 +38,7 @@
         border: 0.5rem solid black;
         border-radius: 1rem;
         position: relative;
+        z-index: 2;
 
         .slide-bullets{
             width: 70%;
@@ -176,6 +183,9 @@
 import { computed } from 'vue';
 import { useGlobalStore } from '~~/stores/global';
 import { useSongStore } from '~~/stores/song';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 const globalStore = useGlobalStore();
 const songStore = useSongStore();
@@ -195,7 +205,7 @@ var yDown = null;
 onMounted(() => {
     document.addEventListener('touchstart', handleTouchStart, false);        
     document.addEventListener('touchmove', handleTouchMove, false);
-    console.log(playLists.value);
+    console.log(route.name);
 });
 
 onUnmounted(() => {
