@@ -1,5 +1,5 @@
 <template>
-    <div class="tablet" :class="menuOpen ? 'is-open' : 'is-closed'">
+    <div class="tablet" :class="{'is-open' : menuOpen, 'is-closed' : !menuOpen && hasOpenedOnce}">
         <div class="turn-on-overlay-top"></div>
         <div class="turn-on-overlay-bottom"></div>
     </div>
@@ -107,4 +107,14 @@ import { useGlobalStore } from '~~/stores/global';
 
 const globalStore = useGlobalStore();
 const menuOpen = computed(() => globalStore.menuFocus);
+
+// Nieuw: hiermee onthouden we of de tablet ooit open is geweest
+const hasOpenedOnce = ref(false);
+
+// Luister naar menuOpen. Zodra die 1x true is, blijft hasOpenedOnce true.
+watch(menuOpen, (newValue) => {
+    if (newValue === true) {
+        hasOpenedOnce.value = true;
+    }
+});
 </script>
