@@ -1,9 +1,21 @@
 <template>
     <div class="tablet" :class="{'is-open' : menuOpen, 'is-closed' : !menuOpen && hasOpenedOnce}">
         <div id="slideList" class="slide-list">
-            <div id="0" class="slide-1"></div>
-            <div id="1" class="slide-2"></div>
-            <div id="2" class="slide-3"></div>
+            <div class="slide" style="background-color: grey;" id="0">
+                <div class="content">
+                    <img src="../assets/images/settings-image.png" alt="settings image">
+                    <h1>settings</h1>
+                </div>
+            </div>
+            <div v-for="(playList, index) in playLists" :style="{'backgroundColor': playList.color}" :id="index + 1" class="slide">
+                <div class="content">
+                    <img :src="playList.image" alt="playlist image">
+                    <h1>Title</h1>
+                </div>
+            </div>
+        </div>
+        <div class="slide-bullets">
+            <div class="bullet" :class="{ 'bullet-selected': currentSlide === index }" v-for="(bullet, index) in playLists.length + 1"></div>
         </div>
         <div class="turn-on-overlay-top"></div>
         <div class="turn-on-overlay-bottom"></div>
@@ -21,6 +33,29 @@
         border-radius: 1rem;
         position: relative;
 
+        .slide-bullets{
+            width: 70%;
+            height: 10%;
+            display: flex;
+            position: fixed;
+            justify-content: space-between;
+            align-items: center;
+            left: 50%;
+            transform: translate(-50%, 0);
+
+            .bullet{
+                width: 0.5rem;
+                height: 0.5rem;
+                border-radius: 50%;
+                border: 0.1rem black solid;
+                transition: 0.2s ease-in-out all;
+            }
+
+            .bullet-selected{
+                background-color: white;
+            }
+        }
+
         .slide-list{
             top: 0;
             left: 0;
@@ -30,22 +65,30 @@
             display: flex;
             overflow-x: hidden;
 
-            .slide-1{
+            .slide{
                 min-width: 100%;
                 height: 100%;
-                background-color: green;
-            }
+                overflow: hidden;
 
-            .slide-2{
-                min-width: 100%;
-                height: 100%;
-                background-color: red;
-            }
+                .content{
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
 
-            .slide-3{
-                min-width: 100%;
-                height: 100%;
-                background-color: blue;
+                    img{
+                        width: 8rem;
+                        border-radius: 1rem;
+                    }
+
+                    h1{
+                        margin: 0;
+                    }
+
+                    rotate: 90deg;
+                }
             }
         }
 
@@ -132,9 +175,14 @@
 <script setup>
 import { computed } from 'vue';
 import { useGlobalStore } from '~~/stores/global';
+import { useSongStore } from '~~/stores/song';
 
 const globalStore = useGlobalStore();
+const songStore = useSongStore();
+
 const menuOpen = computed(() => globalStore.menuFocus);
+
+const playLists = computed(() => songStore.getAllPlayLists());
 
 const currentSlide = ref(0);
 
@@ -147,6 +195,7 @@ var yDown = null;
 onMounted(() => {
     document.addEventListener('touchstart', handleTouchStart, false);        
     document.addEventListener('touchmove', handleTouchMove, false);
+    console.log(playLists.value);
 });
 
 onUnmounted(() => {
@@ -194,7 +243,7 @@ function handleTouchMove(evt) {
     } else {
         const slideWidth = slideList.clientWidth;
         if ( yDiff > 0 ) {
-            if(menuOpen.value && currentSlide.value < 2){
+            if(menuOpen.value && currentSlide.value < songStore.getAllPlayLists().length){
                 currentSlide.value += 1;
 
                 slideList.scrollTo({

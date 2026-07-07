@@ -81,6 +81,7 @@
                 position: absolute;
                 background-color: red;
                 border-radius: 50%;
+                background-position: center;
             }
 
             .rotate-bubble-image{

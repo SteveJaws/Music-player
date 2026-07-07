@@ -48,7 +48,7 @@ span, p, h1, h2, h3, h4, h5, h6{
 }
 
 .shake{
-  animation: shake-effect 0.5s ease-in-out;
+  animation: shake-effect 0.2s ease-in-out;
 }
 
 @keyframes shake-effect{
