@@ -1,5 +1,5 @@
 <template>
-    <div class="container" :class="{'tablet-open-anim' : tabletOpen}">
+    <div class="container" :class="{'tablet-open-anim' : tabletOpen, 'tablet-close-anim' : tabletClose}">
         <div class="top"></div>
         <div class="bottom">
             <div class="home-button"></div>
@@ -15,6 +15,7 @@
         top: 50%;
         left: -13rem;
         transform: translate(0, -50%) rotate(-45deg);
+
         .top{
             width: 100%;
             height: 85%;
@@ -55,7 +56,21 @@
                 transform: translate(0, -50%) rotate(240deg);
             }
         }
-        
+    }
+
+    .tablet-close-anim{
+        animation: 0.3s close-tablet ease-in forwards;
+
+        @keyframes close-tablet{
+            0%{
+                left: calc(100% - 13rem);
+                transform: translate(0, -50%) rotate(240deg);
+            }
+            100%{
+                left: -55%;
+                transform: translate(0, -50%) rotate(-45deg);
+            }
+        }
     }
 </style>
 
@@ -63,6 +78,7 @@
 import { useGlobalStore } from '~~/stores/global';
 
 const tabletOpen = ref(false);
+const tabletClose = ref(false);
 const globalStore = useGlobalStore();
 
 // Vang de props op in een variabele (meestal 'props' genoemd)
@@ -72,10 +88,18 @@ const props = defineProps({
 
 watch(() => props.tabletOpen, (newValue, oldValue) => {
     if(newValue === true && oldValue === false){
+        tabletClose.value = false;
         tabletOpen.value = newValue;
         setTimeout(() => {
             globalStore.shake();
         }, 300);
+    }
+    else if(newValue === false && oldValue === true){
+        tabletOpen.value = newValue;
+        tabletClose.value = true;
+        setTimeout(() => {
+            globalStore.shake();
+        }, 300)
     }
 });
 </script>
