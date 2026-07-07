@@ -1,9 +1,6 @@
 <template>
     <div class="container" v-on:animationend="globalStore.shake" :class="{'tablet-open-anim' : tabletOpen, 'tablet-close-anim' : tabletClose}">
-        <div class="top"></div>
-        <div class="bottom">
-            <div class="home-button"></div>
-        </div>
+        <TabletScreen />
     </div>
 </template>
 
@@ -21,25 +18,6 @@
             height: 85%;
             border-top-left-radius: 0.5rem;
             border-top-right-radius: 0.5rem;
-            background-color: blue;
-        }
-
-        .bottom{
-            width: 100%;
-            height: 15%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom-left-radius: 0.5rem;
-            border-bottom-right-radius: 0.5rem;
-            background-color: red;
-
-            .home-button{
-                width: 2rem;
-                height: 2rem;
-                background-color: pink;
-                border-radius: 50%;
-            }
         }
     }
 
@@ -75,6 +53,7 @@
 </style>
 
 <script setup>
+import TabletScreen from '~/pages/tabletScreen.vue';
 import { useGlobalStore } from '~~/stores/global';
 
 const tabletOpen = ref(false);
