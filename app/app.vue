@@ -78,6 +78,8 @@ const tabletOpen = ref(false);
 
 const shouldShake = computed(() => globalStore.shouldShake);
 
+const menuFocus = computed(() => globalStore.menuFocus);
+const bubbleFocus = computed(() => globalStore.bubbleFocus);
 
 onMounted(() => {
   audioStore.startSong({
@@ -126,14 +128,22 @@ function handleTouchMove(evt) {
     if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
         if ( xDiff > 0 ) {
           tabletOpen.value = false;
+          globalStore.closeMenu();
         } else {
-          tabletOpen.value = true;
+          if(bubbleFocus.value === false){
+            tabletOpen.value = true;
+            globalStore.openMenu();
+          }
         }                       
     } else {
         if ( yDiff > 0 ) {
-            audioStore.openBubble();
+            if(menuFocus.value === false){
+              audioStore.openBubble();
+              globalStore.openBubble();
+            }
         } else { 
             audioStore.closeBubble();
+            globalStore.closeBubble();
         }                                                                 
     }
     /* reset values */
