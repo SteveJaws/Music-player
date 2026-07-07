@@ -67,7 +67,8 @@ const globalStore = useGlobalStore();
 
 const tabletOpen = ref(false);
 
-const shouldShake = ref(false);
+const shouldShake = computed(() => globalStore.shouldShake);
+
 
 onMounted(() => {
   audioStore.startSong({
@@ -80,10 +81,6 @@ onMounted(() => {
 
   document.addEventListener('touchstart', handleTouchStart, false);        
   document.addEventListener('touchmove', handleTouchMove, false);
-
-  setInterval(() => {
-    shouldShake.value = globalStore.shouldShake;
-  });
 });
 
 onUnmounted(() => {

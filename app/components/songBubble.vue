@@ -343,10 +343,11 @@
 import { useAudioStore } from '~~/stores/audio';
 
     const audioStore = useAudioStore();
-    const songIsPlaying = ref(false);
     const bubbleIsOpen = ref(false);
-    const currentSong = ref(null);
-    const playerInfo = ref(null);
+
+    const songIsPlaying = computed(() => audioStore.isPlaying);
+    const currentSong = computed(() => audioStore.getCurrentSong());
+    const playerInfo = computed(() => audioStore.getPlayerInfo());
 
     function openBubble(){
         const bubble = document.getElementById("bubble");
@@ -379,23 +380,15 @@ import { useAudioStore } from '~~/stores/audio';
         audioStore.closeBubble();
     }
 
-    onMounted(() => {
-        getData();
-    });
-
-    function getData(){
-        setInterval(() => {
-            songIsPlaying.value = audioStore.isPlaying;
-            currentSong.value = audioStore.getCurrentSong();
-            playerInfo.value = audioStore.getPlayerInfo();
-            
-            if(audioStore.shouldOpenBubble() && bubbleIsOpen.value == false){
-                openBubble();
+    watch(
+        () => audioStore.shouldOpenBubble(),
+        (shouldOpen) => {
+            if (shouldOpen && !bubbleIsOpen.value) {
+            openBubble();
+            } else if (!shouldOpen && bubbleIsOpen.value) {
+            closeBubble();
             }
-
-            else if(audioStore.shouldOpenBubble() == false && bubbleIsOpen.value == true){
-                closeBubble();
-            }
-        }, 10);
-    }
+        },
+        { immediate: true } // Zorgt dat de check ook direct bij het laden één keer runt
+    );
 </script>

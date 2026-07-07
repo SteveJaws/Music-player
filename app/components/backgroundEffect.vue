@@ -55,45 +55,30 @@
         setInterval(() => {
             createBlock();
         }, 1500);
-        setInterval(() => {
-           shouldDeleteBlock();
-        },50);
     }
 
-    function createBlock(){
-        const parent = document.getElementById("backgroundEffect");
+    function createBlock() {
+    const parent = document.getElementById("backgroundEffect");
+    if (!parent) return;
 
-        const block = document.createElement("div");
+    const block = document.createElement("div");
+    block.classList.add("block");
 
-        block.classList.add("block");
-
-        if (mainColor) {
-            block.classList.add("color-main");
-            mainColor = false;
-        } else {
-            block.classList.add("color-secondary");
-            mainColor = true;
-        }
-
-        parent.appendChild(block);
-
-        blockList.push(block);
+    // Kleur wisselen
+    if (mainColor) {
+        block.classList.add("color-main");
+        mainColor = false;
+    } else {
+        block.classList.add("color-secondary");
+        mainColor = true;
     }
 
-    function shouldDeleteBlock(){
-        const parent = document.getElementById("backgroundEffect");
-        if (!parent) return;
+    parent.appendChild(block);
 
-        const parentWidth = parent.getBoundingClientRect().width;
-
-        blockList.forEach((block) => {
-            const currentBlockWidth = block.getBoundingClientRect().width;
-
-            if (currentBlockWidth >= parentWidth + (parentWidth * 0.5)) {
-                block.remove(); 
-                const index = blockList.indexOf(block);
-                blockList.splice(index, 1);
-            }
-        });
-    }
+    // DE TRICK: Zodra de CSS-animatie van dit specifieke blokje klaar is, 
+    // verwijdert hij zichzelf direct uit de HTML. Geen loops nodig!
+    block.addEventListener('animationend', () => {
+        block.remove();
+    });
+}
 </script>

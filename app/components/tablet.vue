@@ -70,15 +70,12 @@ const props = defineProps({
     tabletOpen: Boolean
 });
 
-onMounted(() => {
-    setInterval(() => {
-        if(tabletOpen.value == false && props.tabletOpen == true){
-            setTimeout(() => {
-                globalStore.shake();
-            }, 300);
-        }
-
-        tabletOpen.value = props.tabletOpen;
-    }, 10);
+watch(() => props.tabletOpen, (newValue, oldValue) => {
+    if(newValue === true && oldValue === false){
+        tabletOpen.value = newValue;
+        setTimeout(() => {
+            globalStore.shake();
+        }, 300);
+    }
 });
 </script>
