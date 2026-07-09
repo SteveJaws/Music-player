@@ -11,7 +11,7 @@
         top: 0;
         left: 0;
         z-index: -9999999;
-        opacity: 0.2;
+        opacity: 0.6;
         overflow: hidden;
     }
 

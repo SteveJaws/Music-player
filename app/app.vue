@@ -15,20 +15,22 @@ html, body{
 }
 
 body{
-    background-color: $bg-color;
-    color: $text-color;
-
-    width: 100vw;
-    height: 100vh;
+  background-color: $bg-color;
+  color: $text-color;
 }
 
-@media (max-width: 360px) {
+.app{
+  width: 100vw;
+  height: 100vh;
+}
+
+@media (max-width: 380px) {
   body{
     font-size: 20px;
   }
 }
 
-@media (min-width: 361px) and (max-width: 412px) {
+@media (min-width: 390px) and (max-width: 412px) {
   body{
     font-size: 21px;
   }
@@ -44,7 +46,9 @@ span, p, h1, h2, h3, h4, h5, h6{
   padding: 0 1rem;
 }
 
-.app, .container{
+.container{
+  position: absolute;
+  top: 0;
   max-width: 700px;
   margin: 0 auto;
 }

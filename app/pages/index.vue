@@ -1,5 +1,4 @@
 <template>
-    <SongBubble />
     <div class="container">
         <div></div>
         <div class="text-top">
@@ -13,6 +12,7 @@
             </span>
         </div>
     </div>
+    <SongBubble />
 </template>
 
 <style lang="scss" scoped>

@@ -1,27 +1,41 @@
 <template>
     <div class="tablet" :class="{'is-open' : menuOpen, 'is-closed' : !menuOpen && hasOpenedOnce}">
         <div id="slideList" class="slide-list">
-            <div v-if="route.name === 'index'"  @click="globalStore.page('/settings')" class="slide" style="background-color: grey;" id="0">
+            <button v-if="route.name === 'index'"  @click="globalStore.page('/settings')" class="slide" style="background-color: grey;" id="0">
                 <div class="content">
                     <img src="../assets/images/settings.png" alt="settings image">
                     <h1>Settings</h1>
                 </div>
-            </div>
-            <div v-if="route.name === 'settings'"  @click="globalStore.page('/')" class="slide" style="background-color: grey;" id="0">
+            </button>
+            <button v-if="route.name === 'settings'"  @click="globalStore.page('/')" class="slide" style="background-color: grey;" id="0">
                 <div class="content">
                     <img src="../assets/images/home.png" alt="settings image">
                     <h1>Home</h1>
                 </div>
-            </div>
-            <div v-for="(playList, index) in playLists" :style="{'backgroundColor': playList.color}" :id="index + 1" class="slide">
+            </button>
+            <button v-if="route.name !== 'settings' && route.name !== 'index'"  @click="globalStore.page('/')" class="slide" style="background-color: grey;" id="0">
+                <div class="content">
+                    <img src="../assets/images/home.png" alt="settings image">
+                    <h1>Home</h1>
+                </div>
+            </button>
+            <button v-for="(playList, index) in playLists" @click="globalStore.page('/playlist/' + (index + 1))" :style="{'backgroundColor': playList.color}" :id="index + 1" class="slide">
                 <div class="content">
                     <img :src="playList.image" alt="playlist image">
-                    <h1>Title</h1>
+                    <h1>{{ playList.title }}</h1>
                 </div>
-            </div>
+            </button>
+            <!-- its + 1 because the new playlist slide needs to be added after the last playlist slide -->
+            <button @click="globalStore.page('/')" class="slide" style="background-color: grey;" :id="playLists.length + 1">
+                <div class="content">
+                    <img src="../assets/images/home.png" alt="settings image">
+                    <h1>New</h1>
+                </div>
+            </button>
         </div>
         <div class="slide-bullets">
-            <div class="bullet" :class="{ 'bullet-selected': currentSlide === index }" v-for="(bullet, index) in playLists.length + 1"></div>
+            <!-- its + 2because there is the settings or home slide and the new playlist slide -->
+            <div class="bullet" :class="{ 'bullet-selected': currentSlide === index }" v-for="(bullet, index) in playLists.length + 2"></div>
         </div>
         <div class="turn-on-overlay-top"></div>
         <div class="turn-on-overlay-bottom"></div>
@@ -71,6 +85,10 @@
             position: absolute;
             display: flex;
             overflow-x: hidden;
+
+            button{
+                border: none;
+            }
 
             .slide{
                 min-width: 100%;
@@ -182,17 +200,17 @@
 <script setup>
 import { computed } from 'vue';
 import { useGlobalStore } from '~~/stores/global';
-import { useSongStore } from '~~/stores/song';
+import { usePlaylistStore } from '~~/stores/playlist';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
 const globalStore = useGlobalStore();
-const songStore = useSongStore();
+const playlistStore = usePlaylistStore();
 
 const menuOpen = computed(() => globalStore.menuFocus);
 
-const playLists = computed(() => songStore.getAllPlayLists());
+const playLists = computed(() => playlistStore.getAllPlayLists());
 
 const currentSlide = ref(0);
 
@@ -253,7 +271,8 @@ function handleTouchMove(evt) {
     } else {
         const slideWidth = slideList.clientWidth;
         if ( yDiff > 0 ) {
-            if(menuOpen.value && currentSlide.value < songStore.getAllPlayLists().length){
+            // its +1 because there is a new playlist slide after the last playlist slide
+            if(menuOpen.value && currentSlide.value < playlistStore.getAllPlayLists().length + 1){
                 currentSlide.value += 1;
 
                 slideList.scrollTo({
