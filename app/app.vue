@@ -1,11 +1,10 @@
 <template>
   <BackgroundEffect />
-  <PageTransition v-show="transition" />
   <div class="app" :class="{'shake' : shouldShake}">
     <NuxtPage />
   </div>
   <Tablet :tablet-open="tabletOpen" />
-
+  <PageTransition v-show="transition" />
 </template>
 
 <style lang="scss">
